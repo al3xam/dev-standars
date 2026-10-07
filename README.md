@@ -24,7 +24,7 @@ Los proyectos se organizan por tipo bajo una raíz configurable, sin fijar una r
 ├── websites/
 ├── prestashop/
 └── tooling/
-	└── project-standards/
+	└── dev-standars/
 ```
 
 La ubicación por tipo es `apps/<nombre>`, `games/<nombre>`, `websites/<nombre>` o `prestashop/<nombre>`. Una ruta explícita indicada al crear el proyecto tiene prioridad sobre la ubicación automática.
@@ -67,7 +67,7 @@ Para crear el commit inicial, Git debe tener `user.name` y `user.email` configur
 
 ## Prompts de VS Code
 
-Los prompts fuente están en `.github/prompts/` y se copian a cada proyecto nuevo. Están disponibles como `/createapp`, `/creategame`, `/createweb`, `/createmodule`, `/editproject` y `/updatestandards`. Para que VS Code los detecte desde este repositorio, abrir `project-standards` como carpeta de workspace.
+Los prompts fuente están en `.github/prompts/` y se copian a cada proyecto nuevo. Están disponibles como `/createapp`, `/creategame`, `/createweb`, `/createmodule`, `/editproject` y `/updatestandards`. Para que VS Code los detecte desde este repositorio, abrir `dev-standars` como carpeta de workspace.
 
 La raíz de desarrollo debe poder configurarse mediante una opción del comando o una variable de entorno. La configuración con rutas personales no debe versionarse.
 
@@ -180,4 +180,5 @@ Antes de publicar, debe cumplirse lo siguiente:
 ## Pendiente de decisión
 
 - Cómo se automatizará la distribución de actualizaciones de estándares a los repositorios de proyectos.
-- Validar creación remota y protección de `main` en un repositorio de prueba de GitHub, sin reutilizar un nombre existente.
+- El repositorio central privado está publicado en `https://github.com/al3xam/dev-standars`, con `main` y `develop`.
+- La protección remota de `main` no está activa: GitHub devuelve `403` porque el plan actual no permite branch protection para este repositorio privado. Se mantiene privado; no se ha cambiado a público.
