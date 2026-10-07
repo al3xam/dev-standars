@@ -180,4 +180,5 @@ Antes de publicar, debe cumplirse lo siguiente:
 ## Pendiente de decisión
 
 - Cómo se automatizará la distribución de actualizaciones de estándares a los repositorios de proyectos.
-- Validar creación remota y protección de `main` en un repositorio de prueba de GitHub, sin reutilizar un nombre existente.
+- El repositorio central privado ya está publicado en `https://github.com/al3xam/project-standards`, con `main` y `develop`.
+- La protección remota de `main` no está activa: GitHub devuelve `403` porque el plan actual no permite branch protection para este repositorio privado. Se mantiene privado; no se ha cambiado a público.
