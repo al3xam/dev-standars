@@ -1,0 +1,20 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs
+*.log
+logs/
+
+# Local caches and temporary files
+.cache/
+.tmp/
+*.tmp
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,11 @@
+# Xcode build output and user-specific data
+DerivedData/
+build/
+xcuserdata/
+*.xcuserstate
+*.moved-aside
+*.hmap
+
+# Generated Apple application packages
+*.ipa
+*.dSYM/

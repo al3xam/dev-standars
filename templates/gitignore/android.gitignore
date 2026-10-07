@@ -1,0 +1,12 @@
+# Gradle and Android Studio local state
+.gradle/
+local.properties
+*.iml
+
+# Android build and native build output
+build/
+.cxx/
+.externalNativeBuild/
+
+# Generated captures
+captures/
