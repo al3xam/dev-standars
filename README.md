@@ -69,6 +69,22 @@ Para crear el commit inicial, Git debe tener `user.name` y `user.email` configur
 
 Los prompts fuente están en `.github/prompts/` y se copian a cada proyecto nuevo. Están disponibles como `/createapp`, `/creategame`, `/createweb`, `/createmodule`, `/editproject` y `/updatestandards`. Para que VS Code los detecte desde este repositorio, abrir `dev-standars` como carpeta de workspace.
 
+## Actualizar estándares instalados
+
+Cada proyecto registra el repositorio de origen, la versión instalada y los hashes de archivos gestionados. El actualizador consulta la rama `main` de ese repositorio con GitHub CLI; `--source` permite usar una copia local. Por defecto solo muestra diferencias; `--apply` aplica los cambios tras revisar el diff. Se niega a sobrescribir personalizaciones locales, aborta toda la operación si encuentra conflictos y requiere incrementar `templates/project.yml` con SemVer cuando cambie el contenido. No modifica código del proyecto ni hace commit o push.
+
+```sh
+python3 .dev-standards/scripts/update-standards.py
+python3 .dev-standards/scripts/update-standards.py --source /ruta/a/dev-standars
+python3 .dev-standards/scripts/update-standards.py --apply
+```
+
+La suite automatizada del actualizador se ejecuta desde la raíz del repositorio central:
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
 La raíz de desarrollo debe poder configurarse mediante una opción del comando o una variable de entorno. La configuración con rutas personales no debe versionarse.
 
 Cada proyecto debe guardar su manifiesto en `.dev-standards/project.yml`, generado a partir de [`templates/project.yml`](templates/project.yml):
@@ -77,19 +93,20 @@ Cada proyecto debe guardar su manifiesto en `.dev-standards/project.yml`, genera
 schema_version: 1
 
 project:
-	name: repost-app
-	type: app
-	components:
-		- api
-		- mobile
-		- ios
-		- android
+  name: repost-app
+  type: app
+  components:
+    - api
+    - mobile
+    - ios
+    - android
 
 standards:
-	version: "0.1.0"
+  repository: "al3xam/dev-standars"
+  version: "0.1.0"
 ```
 
-`schema_version` identifica el formato del manifiesto; `standards.version` registra la versión SemVer de los estándares instalados. `project.name` usa kebab-case, `project.type` determina la carpeta y `project.components` enumera solo los componentes aplicables. El comando de creación debe generar el manifiesto con los valores elegidos y la versión de estándares instalada.
+`schema_version` identifica el formato del manifiesto; `standards.repository` indica la fuente y `standards.version` registra la versión SemVer instalada. `managed-files.sha256` permite detectar personalizaciones en archivos gestionados. `project.name` usa kebab-case, `project.type` determina la carpeta y `project.components` enumera solo los componentes aplicables.
 
 ## Requisitos comunes
 
@@ -179,6 +196,5 @@ Antes de publicar, debe cumplirse lo siguiente:
 
 ## Pendiente de decisión
 
-- Cómo se automatizará la distribución de actualizaciones de estándares a los repositorios de proyectos.
 - El repositorio central privado está publicado en `https://github.com/al3xam/dev-standars`, con `main` y `develop`.
 - La protección remota de `main` no está activa: GitHub devuelve `403` porque el plan actual no permite branch protection para este repositorio privado. Se mantiene privado; no se ha cambiado a público.

@@ -6,4 +6,5 @@ project:
   components: []
 
 standards:
+  repository: "al3xam/dev-standars"
   version: "0.1.0"
