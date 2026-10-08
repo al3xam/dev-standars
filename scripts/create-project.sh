@@ -139,6 +139,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 standards_version="$(awk '$1 == "version:" { gsub(/"/, "", $2); print $2; exit }' "$repo_root/templates/project.yml")"
 [[ -n "$standards_version" ]] || fail "could not read standards version from templates/project.yml"
+standards_repository="$(awk '$1 == "repository:" { gsub(/"/, "", $2); print $2; exit }' "$repo_root/templates/project.yml")"
+[[ -n "$standards_repository" ]] || fail "could not read standards repository from templates/project.yml"
 
 if [[ -n "$explicit_path" ]]; then
 	destination="$explicit_path"
@@ -239,12 +241,16 @@ fi
 cp "$repo_root/README.md" "$temporary_project/.dev-standards/README.md"
 cp "$repo_root/GLOBAL.md" "$temporary_project/.dev-standards/GLOBAL.md"
 cp -R "$repo_root/git" "$temporary_project/.dev-standards/git"
-cp -R "$repo_root/prestashop" "$temporary_project/.dev-standards/prestashop"
+if [[ "$project_type" == "prestashop" ]]; then
+	cp -R "$repo_root/prestashop" "$temporary_project/.dev-standards/prestashop"
+fi
 cp -R "$repo_root/security" "$temporary_project/.dev-standards/security"
 cp -R "$repo_root/testing" "$temporary_project/.dev-standards/testing"
 cp -R "$repo_root/templates" "$temporary_project/.dev-standards/templates"
 cp "$repo_root/scripts/create-project.sh" "$temporary_project/.dev-standards/scripts/create-project.sh"
 chmod +x "$temporary_project/.dev-standards/scripts/create-project.sh"
+cp "$repo_root/scripts/update-standards.py" "$temporary_project/.dev-standards/scripts/update-standards.py"
+chmod +x "$temporary_project/.dev-standards/scripts/update-standards.py"
 cp -R "$repo_root/.github/prompts/." "$temporary_project/.github/prompts/"
 
 {
@@ -257,7 +263,7 @@ cp -R "$repo_root/.github/prompts/." "$temporary_project/.github/prompts/"
 			printf '    - %s\n' "$component"
 		done
 	fi
-	printf '\nstandards:\n  version: "%s"\n' "$standards_version"
+	printf '\nstandards:\n  repository: "%s"\n  version: "%s"\n' "$standards_repository" "$standards_version"
 } > "$temporary_project/.dev-standards/project.yml"
 
 {
@@ -287,6 +293,15 @@ cat > "$temporary_project/AGENTS.md" <<'EOF'
 - No inventes requisitos ni decisiones de producto; consulta al mantenedor si falta información.
 - Ejecuta las pruebas y comprobaciones pertinentes y resume sus resultados.
 EOF
+
+(
+	cd "$temporary_project"
+	find .dev-standards -type f ! -path '.dev-standards/project.yml' ! -path '.dev-standards/managed-files.sha256' -print
+	find .github/prompts -type f -print
+) | LC_ALL=C sort | while IFS= read -r relative_path; do
+	file_hash="$(shasum -a 256 "$temporary_project/$relative_path" | awk '{ print $1 }')"
+	printf '%s  %s\n' "$file_hash" "$relative_path"
+done > "$temporary_project/.dev-standards/managed-files.sha256"
 
 git -C "$temporary_project" init
 git -C "$temporary_project" branch -M main
