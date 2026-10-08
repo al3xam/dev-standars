@@ -103,7 +103,7 @@ project:
 
 standards:
   repository: "al3xam/dev-standars"
-  version: "0.1.0"
+  version: "0.2.0"
 ```
 
 `schema_version` identifica el formato del manifiesto; `standards.repository` indica la fuente y `standards.version` registra la versión SemVer instalada. `managed-files.sha256` permite detectar personalizaciones en archivos gestionados. `project.name` usa kebab-case, `project.type` determina la carpeta y `project.components` enumera solo los componentes aplicables.
